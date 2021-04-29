@@ -399,7 +399,7 @@ class Connection(NetworkConnectionBase):
         self._check_prompt = False
 
         self._task_uuid = to_text(kwargs.get("task_uuid", ""))
-        self._ssh_type_conn = None
+        self.ssh_type_conn = None
         self._ssh_type = None
 
         self._single_user_mode = False
@@ -440,28 +440,24 @@ class Connection(NetworkConnectionBase):
 
         self.queue_message("log", "network_os is set to %s" % self._network_os)
 
-    @property
-    def ssh_type_conn(self):
         self._ssh_type = self.get_option("ssh_type")
-        if self._ssh_type_conn is None:
-            if self._ssh_type not in ["paramiko", "libssh"]:
-                raise AnsibleConnectionFailure(
-                    "Invalid value '%s' set for ssh_type option."
-                    " Expected value is either 'libssh' or 'paramiko'"
-                    % self._ssh_type
-                )
-
-            # TODO: Remove this check if/when libssh connection plugin is moved to ansible-base
-            if self._ssh_type == "libssh":
-                self._ssh_type = "ansible.netcommon.libssh"
-
-            self._ssh_type_conn = connection_loader.get(
-                self._ssh_type, self._play_context, "/dev/null"
+        if self._ssh_type not in ["paramiko", "libssh"]:
+            raise AnsibleConnectionFailure(
+                "Invalid value '%s' set for ssh_type option."
+                " Expected value is either 'libssh' or 'paramiko'"
+                % self._ssh_type
             )
-            self.queue_message(
-                "vvvv", "ssh type is set to %s" % self.get_option("ssh_type")
-            )
-        return self._ssh_type_conn
+
+        # TODO: Remove this check if/when libssh connection plugin is moved to ansible-base
+        if self._ssh_type == "libssh":
+            self._ssh_type = "ansible.netcommon.libssh"
+
+        self.ssh_type_conn = connection_loader.get(
+            self._ssh_type, self._play_context, "/dev/null"
+        )
+        self.queue_message(
+            "vvvv", "ssh type is set to %s" % self.get_option("ssh_type")
+        )
 
     # To maintain backward compatibility
     @property
@@ -682,7 +678,7 @@ class Connection(NetworkConnectionBase):
                 self.queue_message("debug", "cli session is now closed")
 
                 self.ssh_type_conn.close()
-                self._ssh_type_conn = None
+                self.ssh_type_conn = None
                 self.queue_message(
                     "debug", "ssh connection has been closed successfully"
                 )
