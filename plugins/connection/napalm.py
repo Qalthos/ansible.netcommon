@@ -195,7 +195,14 @@ class Connection(NetworkConnectionBase):
 
             self.napalm.open()
 
-            self._sub_plugin = {"name": "napalm", "obj": self.napalm}
+            # TODO: This plugin will likely be deleted before we need to think
+            #       about cleaning this up, but just in case, we should remove
+            #       use of _sub_plugin after support for ansible < 2.11 is
+            #       dropped
+            if hasattr(self, "_sub_plugins"):
+                self._sub_plugins.append(self.napalm)
+            else:
+                self._sub_plugin = {"name": "napalm", "obj": self.napalm}
             self.queue_message(
                 "vvvv",
                 "created napalm device for network_os %s" % self._network_os,
