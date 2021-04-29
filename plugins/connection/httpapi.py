@@ -226,11 +226,16 @@ class Connection(NetworkConnectionBase):
                 % self._network_os
             )
 
-        self._sub_plugin = {
-            "type": "httpapi",
-            "name": self.httpapi._load_name,
-            "obj": self.httpapi,
-        }
+        # TODO: Drop to only _sub_plugins when we drop support for ansible < 2.11
+        if hasattr(self, "_sub_plugins"):
+            self._sub_plugins.append(self.httpapi)
+        else:
+            self._sub_plugin = {
+                "type": "httpapi",
+                "name": self.httpapi._load_name,
+                "obj": self.httpapi,
+            }
+
         self.queue_message(
             "vvvv",
             "loaded API plugin %s from path %s for network_os %s"

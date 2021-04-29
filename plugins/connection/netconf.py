@@ -238,33 +238,32 @@ class Connection(NetworkConnectionBase):
         self._network_os = self._network_os or "auto"
 
         self.netconf = netconf_loader.get(self._network_os, self)
-        if self.netconf:
+        if not self.netconf:
+            self.netconf = netconf_loader.get("default", self)
+            self.queue_message(
+                "vvvv",
+                "unable to find netconf plugin for network_os %s, falling back to default plugin"
+                % self._network_os,
+            )
+
+        # TODO: Drop to only _sub_plugins when we drop support for ansible < 2.11
+        if hasattr(self, "_sub_plugins"):
+            self._sub_plugins.append(self.netconf)
+        else:
             self._sub_plugin = {
                 "type": "netconf",
                 "name": self.netconf._load_name,
                 "obj": self.netconf,
             }
-            self.queue_message(
-                "vvvv",
-                "loaded netconf plugin %s from path %s for network_os %s"
-                % (
-                    self.netconf._load_name,
-                    self.netconf._original_path,
-                    self._network_os,
-                ),
-            )
-        else:
-            self.netconf = netconf_loader.get("default", self)
-            self._sub_plugin = {
-                "type": "netconf",
-                "name": "default",
-                "obj": self.netconf,
-            }
-            self.queue_message(
-                "vvvv",
-                "unable to load netconf plugin for network_os %s, falling back to default plugin"
-                % self._network_os,
-            )
+        self.queue_message(
+            "vvvv",
+            "loaded netconf plugin %s from path %s for network_os %s"
+            % (
+                self.netconf._load_name,
+                self.netconf._original_path,
+                self._network_os,
+            ),
+        )
 
         self.queue_message("log", "network_os is set to %s" % self._network_os)
         self._manager = None

@@ -418,11 +418,15 @@ class Connection(NetworkConnectionBase):
 
         self.cliconf = cliconf_loader.get(self._network_os, self)
         if self.cliconf:
-            self._sub_plugin = {
-                "type": "cliconf",
-                "name": self.cliconf._load_name,
-                "obj": self.cliconf,
-            }
+            # TODO: Drop to only _sub_plugins when we drop support for ansible < 2.11
+            if hasattr(self, "_sub_plugins"):
+                self._sub_plugins.append(self.cliconf)
+            else:
+                self._sub_plugin = {
+                    "type": "cliconf",
+                    "name": self.cliconf._load_name,
+                    "obj": self.cliconf,
+                }
             self.queue_message(
                 "vvvv",
                 "loaded cliconf plugin %s from path %s for network_os %s"
@@ -455,6 +459,9 @@ class Connection(NetworkConnectionBase):
         self.ssh_type_conn = connection_loader.get(
             self._ssh_type, self._play_context, "/dev/null"
         )
+        # TODO: Remove hasattr check when we drop support for ansible < 2.11
+        if hasattr(self, "_sub_plugins"):
+            self._sub_plugins.append(self.ssh_type_conn)
         self.queue_message(
             "vvvv", "ssh type is set to %s" % self.get_option("ssh_type")
         )
