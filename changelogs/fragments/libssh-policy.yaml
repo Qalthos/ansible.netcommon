@@ -1,0 +1,4 @@
+---
+bugfixes:
+  - libssh - MyAddPolicy had unreachable deprecated code as it is only used by libssh.
+    The non-persistent path has been removed (https://github.com/ansible-collections/ansible.netcommon/issues/522).

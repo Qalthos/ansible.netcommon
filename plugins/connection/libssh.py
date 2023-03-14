@@ -204,7 +204,6 @@ except ImportError:
 AUTHENTICITY_MSG = """
 libssh: The authenticity of host '%s' can't be established due to '%s'.
 The %s key fingerprint is %s.
-Are you sure you want to continue connecting (yes/no)?
 """
 
 # SSH Options Regex
@@ -221,8 +220,7 @@ class MyAddPolicy(object):
     local L{HostKeys} object, and saving it.  This is used by L{SSHClient}.
     """
 
-    def __init__(self, new_stdin, connection):
-        self._new_stdin = new_stdin
+    def __init__(self, connection):
         self.connection = connection
         self._options = connection._options
 
@@ -235,32 +233,11 @@ class MyAddPolicy(object):
                 not self._options["host_key_auto_add"],
             )
         ):
-            if (
-                self.connection.get_option("use_persistent_connections")
-                or self.connection.force_persistence
-            ):
-                # don't print the prompt string since the user cannot respond
-                # to the question anyway
-                raise AnsibleError(
-                    AUTHENTICITY_MSG.rsplit("\n", 2)[0]
-                    % (hostname, message, key_type, fingerprint)
-                )
-
-            self.connection.connection_lock()
-            old_stdin = sys.stdin
-            sys.stdin = self._new_stdin
-
-            # clear out any premature input on sys.stdin
-            tcflush(sys.stdin, TCIFLUSH)
-
-            inp = input(
+            # don't print the prompt string since the user cannot respond
+            # to the question anyway
+            raise AnsibleError(
                 AUTHENTICITY_MSG % (hostname, message, key_type, fingerprint)
             )
-            sys.stdin = old_stdin
-
-            self.connection.connection_unlock()
-            if inp not in ["yes", "y", ""]:
-                raise AnsibleError("host connection rejected by user")
 
         session.hostkey_auto_add(username)
 
@@ -389,9 +366,7 @@ class Connection(ConnectionBase):
                     % PYLIBSSH_VERSION
                 )
 
-            self.ssh.set_missing_host_key_policy(
-                MyAddPolicy(self._new_stdin, self)
-            )
+            self.ssh.set_missing_host_key_policy(MyAddPolicy(self))
 
             self.ssh.connect(
                 host=remote_addr.lower(),
