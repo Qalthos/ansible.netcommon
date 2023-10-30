@@ -263,7 +263,7 @@ Parameters
                                 <div>var: ansible_libssh_publickey_algorithms</div>
                     </td>
                 <td>
-                        <div>List of algorithms to forward to SSH_OPTIONS_PUBLICKEY_ACCEPTED_TYPES.</div>
+                        <div>List of algorithms to forward to SSH_OPTIONS_PUBLICKEY_ACCEPTED_ALGORITHMS.</div>
                 </td>
             </tr>
             <tr>

@@ -103,7 +103,7 @@ DOCUMENTATION = """
       publickey_accepted_algorithms:
         default: ''
         description:
-            - List of algorithms to forward to SSH_OPTIONS_PUBLICKEY_ACCEPTED_TYPES.
+            - List of algorithms to forward to SSH_OPTIONS_PUBLICKEY_ACCEPTED_ALGORITHMS.
         type: string
         env:
           - name: ANSIBLE_LIBSSH_PUBLICKEY_ALGORITHMS
