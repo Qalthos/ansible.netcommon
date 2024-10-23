@@ -2,14 +2,39 @@
 
 # Ansible Network Collection for Common Code (netcommon)
 [![CI](https://zuul-ci.org/gated.svg)](https://ansible.softwarefactory-project.io/zuul/builds?project=ansible-collections%2Fansible.netcommon) <!--[![Codecov](https://img.shields.io/codecov/c/github/ansible-collections/ansible.netcommon)](https://codecov.io/gh/ansible-collections/ansible.netcommon)-->
+[![Codecov](https://codecov.io/gh/ansible-collections/ansible.netcommon/branch/main/graph/badge.svg)](https://codecov.io/gh/ansible-collections/ansible.netcommon)
+[![CI](https://github.com/ansible-collections/ansible.netcommon/actions/workflows/tests.yml/badge.svg?branch=main&event=schedule)](https://github.com/ansible-collections/ansible.netcommon/actions/workflows/tests.yml)
 
 The Ansible ``ansible.netcommon`` collection includes common content to help automate the management of network, security, and cloud devices.
-This includes  connection plugins, such as ``network_cli``, ``httpapi``, and ``netconf``.
+This includes connection plugins, such as ``network_cli``, ``httpapi``, and ``netconf``.
+
+## Support
+
+As a Red Hat Ansible [Certified Content](https://catalog.redhat.com/software/search?target_platforms=Red%20Hat%20Ansible%20Automation%20Platform), this collection is entitled to [support](https://access.redhat.com/support/) through [Ansible Automation Platform](https://www.redhat.com/en/technologies/management/ansible) (AAP).
+
+If a support case cannot be opened with Red Hat and the collection has been obtained either from [Galaxy](https://galaxy.ansible.com/ui/) or [GitHub](https://github.com/ansible-collections/ansible.netcommon), there is community support available at no charge.
+
+You can join us on [#network:ansible.com](https://matrix.to/#/#network:ansible.com) room or the [Ansible Forum Network Working Group](https://forum.ansible.com/g/network-wg).
+
+For more information you can check the communication section below.
+
+## Communication
+
+* Join the Ansible forum:
+  * [Get Help](https://forum.ansible.com/c/help/6): get help or help others.
+  * [Posts tagged with 'network'](https://forum.ansible.com/tag/network): subscribe to participate in collection-related conversations.
+  * [Ansible Network Automation Working Group](https://forum.ansible.com/g/network-wg/): by joining the team you will automatically get subscribed to the posts tagged with [network](https://forum.ansible.com/tags/network).
+  * [Social Spaces](https://forum.ansible.com/c/chat/4): gather and interact with fellow enthusiasts.
+  * [News & Announcements](https://forum.ansible.com/c/news/5): track project-wide announcements including social events.
+
+* The Ansible [Bullhorn newsletter](https://docs.ansible.com/ansible/devel/community/communication.html#the-bullhorn): used to announce releases and important changes.
+
+For more information about communication, see the [Ansible communication guide](https://docs.ansible.com/ansible/devel/community/communication.html).
 
 <!--start requires_ansible-->
 ## Ansible version compatibility
 
-This collection has been tested against following Ansible versions: **>=2.9.10**.
+This collection has been tested against following Ansible versions: **>=2.15.0**.
 
 For collections that support Ansible 2.9, please ensure you update your `network_os` to use the
 fully qualified collection name (for example, `cisco.ios.ios`).
@@ -70,6 +95,7 @@ Name | Description
 [ansible.netcommon.cli_backup](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.cli_backup_module.rst)|Back up device configuration from network devices over network_cli
 [ansible.netcommon.cli_command](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.cli_command_module.rst)|Run a cli command on cli-based network devices
 [ansible.netcommon.cli_config](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.cli_config_module.rst)|Push text based configuration to network devices over network_cli
+[ansible.netcommon.cli_restore](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.cli_restore_module.rst)|Restore device configuration to network devices over network_cli
 [ansible.netcommon.grpc_config](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.grpc_config_module.rst)|Fetch configuration/state data from gRPC enabled target hosts.
 [ansible.netcommon.grpc_get](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.grpc_get_module.rst)|Fetch configuration/state data from gRPC enabled target hosts.
 [ansible.netcommon.net_get](https://github.com/ansible-collections/ansible.netcommon/blob/main/docs/ansible.netcommon.net_get_module.rst)|Copy a file from a network device to Ansible Controller
@@ -103,10 +129,7 @@ collections:
 
 The most common use case for this collection is to include it as a dependency in a network device-specific collection. Use the Fully Qualified Collection Name (FQCN) when referring to content in this collection (for example, `ansible.netcommon.network_cli`).
 
-See the [Vyos collection](https://github.com/ansible-collections/vyos) for an example of this.
-
-
-**NOTE**: For Ansible 2.9, you may not see deprecation warnings when you run your playbooks with this collection. Use this documentation to track when a module is deprecated.
+See the [Vyos collection](https://github.com/ansible-collections/vyos.vyos) for an example of this.
 
 ### See Also:
 
